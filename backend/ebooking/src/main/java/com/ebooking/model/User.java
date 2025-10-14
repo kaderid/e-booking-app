@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users") // correspond à ta table SQL
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,19 +16,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String firstName;
+    private String prenom;
+    private String nom;
 
-    @Column(nullable = false)
-    private String lastName;
-
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(unique = true, nullable = false)
+    private String telephone;
+
+    @Column(name = "mot_de_passe", nullable = false)
+    private String motDePasse;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private Statut statut;
 }
