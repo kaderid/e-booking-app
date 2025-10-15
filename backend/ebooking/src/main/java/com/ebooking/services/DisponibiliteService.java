@@ -3,9 +3,7 @@ package com.ebooking.services;
 import com.ebooking.model.Disponibilite;
 import com.ebooking.repository.DisponibiliteRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DisponibiliteService {
@@ -16,16 +14,16 @@ public class DisponibiliteService {
         this.disponibiliteRepository = disponibiliteRepository;
     }
 
+    public Disponibilite save(Disponibilite disponibilite) {
+        return disponibiliteRepository.save(disponibilite);
+    }
+
     public List<Disponibilite> getAll() {
         return disponibiliteRepository.findAll();
     }
 
-    public Optional<Disponibilite> getById(Long id) {
-        return disponibiliteRepository.findById(id);
-    }
-
-    public Disponibilite create(Disponibilite disponibilite) {
-        return disponibiliteRepository.save(disponibilite);
+    public Disponibilite getById(Long id) {
+        return disponibiliteRepository.findById(id).orElse(null);
     }
 
     public void delete(Long id) {

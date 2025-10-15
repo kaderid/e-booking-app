@@ -13,19 +13,24 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 public class RendezVous {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Lien vers le client
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private User client;
 
+    // Lien vers le prestataire
     @ManyToOne
     @JoinColumn(name = "prestataire_id", nullable = false)
     private Prestataire prestataire;
 
     private LocalDate date;
     private LocalTime heure;
-    private String statut;
+
+    @Enumerated(EnumType.STRING)
+    private Statut statut = Statut.EN_ATTENTE; // Valeur par défaut
 }

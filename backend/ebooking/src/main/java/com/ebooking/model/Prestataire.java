@@ -4,24 +4,24 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "prestataire")
+@Table(name = "prestataires")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Prestataire {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String specialite;
+    private String adresse;
+
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    private String specialite;
-
-    private String adresse;
 
     @ManyToOne
     @JoinColumn(name = "service_id", nullable = false)

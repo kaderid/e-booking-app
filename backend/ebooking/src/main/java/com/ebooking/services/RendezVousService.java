@@ -5,7 +5,6 @@ import com.ebooking.repository.RendezVousRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RendezVousService {
@@ -16,20 +15,21 @@ public class RendezVousService {
         this.rendezVousRepository = rendezVousRepository;
     }
 
-    public List<RendezVous> getAll() {
-        return rendezVousRepository.findAll();
-    }
+    public RendezVous saveRendezVous(RendezVous rendezVous) {
+        boolean exists = rendezVousRepository.findExistingRendezVous(
+                rendezVous.getPrestataire().getId(),
+                rendezVous.getDate(),
+                rendezVous.getHeure()
+        ).isPresent();
 
-    public Optional<RendezVous> getById(Long id) {
-        return rendezVousRepository.findById(id);
-    }
+        if (exists) {
+            throw new IllegalArgumentException("⚠️ Le prestataire a déjà un rendez-vous à cette date et heure !");
+        }
 
-    public RendezVous create(RendezVous rendezVous) {
         return rendezVousRepository.save(rendezVous);
     }
 
-    public void delete(Long id) {
-        rendezVousRepository.deleteById(id);
+    public List<RendezVous> getAllRendezVous() {
+        return rendezVousRepository.findAll();
     }
 }
-

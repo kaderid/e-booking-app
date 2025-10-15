@@ -5,7 +5,6 @@ import com.ebooking.repository.PrestataireRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PrestataireService {
@@ -16,19 +15,11 @@ public class PrestataireService {
         this.prestataireRepository = prestataireRepository;
     }
 
-    public List<Prestataire> getAll() {
-        return prestataireRepository.findAll();
-    }
-
-    public Optional<Prestataire> getById(Long id) {
-        return prestataireRepository.findById(id);
-    }
-
-    public Prestataire create(Prestataire prestataire) {
+    public Prestataire savePrestataire(Prestataire prestataire) {
         return prestataireRepository.save(prestataire);
     }
 
-    public void delete(Long id) {
-        prestataireRepository.deleteById(id);
+    public List<Prestataire> getAllPrestataires() {
+        return prestataireRepository.findAll();
     }
 }
