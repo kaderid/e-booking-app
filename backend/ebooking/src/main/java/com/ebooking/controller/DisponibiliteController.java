@@ -1,38 +1,27 @@
 package com.ebooking.controller;
 
-import com.ebooking.model.Disponibilite;
+import com.ebooking.dto.DisponibiliteRequestDTO;
+import com.ebooking.dto.DisponibiliteResponseDTO;
 import com.ebooking.services.DisponibiliteService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/disponibilites")
+@RequiredArgsConstructor
 public class DisponibiliteController {
 
     private final DisponibiliteService disponibiliteService;
 
-    public DisponibiliteController(DisponibiliteService disponibiliteService) {
-        this.disponibiliteService = disponibiliteService;
-    }
-
     @PostMapping
-    public Disponibilite create(@RequestBody Disponibilite disponibilite) {
-        return disponibiliteService.save(disponibilite);
+    public DisponibiliteResponseDTO createDisponibilite(@RequestBody DisponibiliteRequestDTO dto) {
+        return disponibiliteService.createDisponibilite(dto);
     }
 
     @GetMapping
-    public List<Disponibilite> getAll() {
-        return disponibiliteService.getAll();
-    }
-
-    @GetMapping("/{id}")
-    public Disponibilite getById(@PathVariable Long id) {
-        return disponibiliteService.getById(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        disponibiliteService.delete(id);
+    public List<DisponibiliteResponseDTO> getAllDisponibilites() {
+        return disponibiliteService.getAllDisponibilites();
     }
 }

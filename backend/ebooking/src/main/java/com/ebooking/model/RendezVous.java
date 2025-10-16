@@ -32,5 +32,5 @@ public class RendezVous {
     private LocalTime heure;
 
     @Enumerated(EnumType.STRING)
-    private Statut statut = Statut.EN_ATTENTE; // Valeur par défaut
+    private StatutRendezVous statut = StatutRendezVous.EN_ATTENTE;; // Valeur par défaut
 }

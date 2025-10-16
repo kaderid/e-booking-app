@@ -1,31 +1,40 @@
 package com.ebooking.services;
 
+import com.ebooking.dto.UserRequestDTO;
+import com.ebooking.dto.UserResponseDTO;
+import com.ebooking.mapper.UserMapper;
 import com.ebooking.model.User;
 import com.ebooking.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserResponseDTO createUser(UserRequestDTO dto) {
+        User user = userMapper.toEntity(dto);
+        User saved = userRepository.save(user);
+        return userMapper.toResponse(saved);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserResponseDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+        return userMapper.toResponse(user);
     }
 
     public void deleteUser(Long id) {
