@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "rendezvous")
+@Table(name = "rendez_vous")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,12 +18,10 @@ public class RendezVous {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Lien vers le client
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private User client;
 
-    // Lien vers le prestataire
     @ManyToOne
     @JoinColumn(name = "prestataire_id", nullable = false)
     private Prestataire prestataire;
@@ -32,5 +30,5 @@ public class RendezVous {
     private LocalTime heure;
 
     @Enumerated(EnumType.STRING)
-    private StatutRendezVous statut = StatutRendezVous.EN_ATTENTE;; // Valeur par défaut
+    private StatutRendezVous statut;
 }

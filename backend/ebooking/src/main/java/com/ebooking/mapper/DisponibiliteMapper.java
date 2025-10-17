@@ -3,17 +3,17 @@ package com.ebooking.mapper;
 import com.ebooking.dto.DisponibiliteRequestDTO;
 import com.ebooking.dto.DisponibiliteResponseDTO;
 import com.ebooking.model.Disponibilite;
-import com.ebooking.model.Prestataire;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface DisponibiliteMapper {
 
-    @Mapping(source = "prestataire", target = "prestataire")
-    Disponibilite toEntity(DisponibiliteRequestDTO dto, Prestataire prestataire);
+    // Entité -> DTO
+    @Mapping(source = "prestataire.id", target = "prestataireId")
+    DisponibiliteResponseDTO toDto(Disponibilite disponibilite);
 
-    @Mapping(source = "prestataire.user.prenom", target = "prestatairePrenom")
-    @Mapping(source = "prestataire.user.nom", target = "prestataireNom")
-    DisponibiliteResponseDTO toResponse(Disponibilite disponibilite);
+    // DTO -> Entité
+    @Mapping(source = "prestataireId", target = "prestataire.id")
+    Disponibilite toEntity(DisponibiliteRequestDTO dto);
 }

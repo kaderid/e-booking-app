@@ -2,36 +2,41 @@ package com.ebooking.controller;
 
 import com.ebooking.dto.ServiceRequestDTO;
 import com.ebooking.dto.ServiceResponseDTO;
+import com.ebooking.mapper.ServiceMapper;
+import com.ebooking.model.ServiceEntity;
 import com.ebooking.services.ServiceService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/services")
-@RequiredArgsConstructor
 public class ServiceEntityController {
 
     private final ServiceService serviceService;
+    private final ServiceMapper serviceMapper;
+
+    public ServiceEntityController(ServiceService serviceService, ServiceMapper serviceMapper) {
+        this.serviceService = serviceService;
+        this.serviceMapper = serviceMapper;
+    }
 
     @PostMapping
-    public ServiceResponseDTO createService(@RequestBody ServiceRequestDTO dto) {
-        return serviceService.create(dto);
+    public ServiceResponseDTO create(@RequestBody ServiceRequestDTO dto) {
+        // 🔄 conversion du DTO → Entité avec MapStruct
+        ServiceEntity entity = serviceMapper.toEntity(dto);
+
+        // 💾 création en base
+        ServiceEntity saved = serviceService.create(entity);
+
+        // 🔁 conversion Entité → DTO pour la réponse
+        return serviceMapper.toResponseDTO(saved);
     }
 
     @GetMapping
-    public List<ServiceResponseDTO> getAllServices() {
-        return serviceService.getAll();
-    }
-
-    @GetMapping("/{id}")
-    public ServiceResponseDTO getServiceById(@PathVariable Long id) {
-        return serviceService.getById(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteService(@PathVariable Long id) {
-        serviceService.delete(id);
+    public List<ServiceResponseDTO> getAll() {
+        return serviceService.getAll().stream()
+                .map(serviceMapper::toResponseDTO)
+                .toList();
     }
 }

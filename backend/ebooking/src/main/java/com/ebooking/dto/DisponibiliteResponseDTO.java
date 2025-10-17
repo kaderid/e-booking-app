@@ -11,5 +11,5 @@ public class DisponibiliteResponseDTO {
     private String jourSemaine;
     private LocalTime heureDebut;
     private LocalTime heureFin;
-    private String prestataireNom;
+    private Long prestataireId;
 }

@@ -1,18 +1,16 @@
 package com.ebooking.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PrestataireResponseDTO {
-
     private Long id;
-    private String nomComplet;   // concaténation prenom + nom du user
-    private String email;
-    private String telephone;
+    private String prenom;
+    private String nom;
     private String specialite;
     private String adresse;
     private String serviceNom;
