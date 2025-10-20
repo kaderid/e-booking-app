@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:15
+    container_name: ebooking_db_prod
+    environment:
+      POSTGRES_DB: e_booking_prod
+      POSTGRES_USER: booking_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-booking_pass}  # Utiliser variable d'environnement
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d  # Scripts d'initialisation
+    networks:
+      - ebooking-prod-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U booking_user -d e_booking_prod"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+  # Backend Spring Boot
+  backend:
+    image: ebooking/backend:latest
+    container_name: ebooking_backend_prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/e_booking_prod
+      SPRING_DATASOURCE_USERNAME: booking_user
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-booking_pass}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate  # Ne pas modifier la base en production
+      SERVER_PORT: 8080
+      JAVA_OPTS: "-Xmx1024m -Xms512m -XX:+UseG1GC"
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8080:8080"
+    networks:
+      - ebooking-prod-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Frontend Angular
+  frontend:
+    image: ebooking/frontend:latest
+    container_name: ebooking_frontend_prod
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"  # Pour HTTPS
+    networks:
+      - ebooking-prod-network
+    volumes:
+      - ./ssl:/etc/nginx/ssl:ro  # Certificats SSL (si configuré)
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+networks:
+  ebooking-prod-network:
+    driver: bridge
+
+volumes:
+  postgres_prod_data:
+    driver: local

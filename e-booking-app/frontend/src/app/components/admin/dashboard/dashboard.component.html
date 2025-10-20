@@ -1,0 +1,298 @@
+<div class="dashboard-container">
+  <!-- Toolbar -->
+  <mat-toolbar color="primary" class="toolbar">
+    <div class="logo-container" routerLink="/home">
+      <mat-icon class="toolbar-icon">admin_panel_settings</mat-icon>
+      <span class="toolbar-title">S&K Admin</span>
+    </div>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" routerLink="/admin/dashboard" class="dashboard-button">
+      <mat-icon>dashboard</mat-icon>
+      Mon Dashboard
+    </button>
+    <span class="user-info">
+      <mat-icon>person</mat-icon>
+      {{ currentUser?.prenom }} {{ currentUser?.nom }}
+    </span>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Déconnexion</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="welcome-section">
+      <h1 class="welcome-title">Tableau de bord Administrateur</h1>
+      <p class="welcome-subtitle">Gérez votre plateforme E-Booking</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <mat-card class="stat-card users">
+        <div class="stat-icon">
+          <mat-icon>people</mat-icon>
+        </div>
+        <br />
+        <div class="stat-content">
+          <div class="stat-value">{{ statistiques.nombreTotalClients }}</div><br />
+          <div class="stat-label">Utilisateurs</div>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card prestataires">
+        <div class="stat-icon">
+          <mat-icon>business</mat-icon>
+        </div>
+        <br />
+        <div class="stat-content">
+          <div class="stat-value">{{ statistiques.nombreTotalPrestataires }}</div><br />
+          <div class="stat-label">Prestataires</div>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card services">
+        <div class="stat-icon">
+          <mat-icon>build</mat-icon>
+        </div>
+        <br />
+        <div class="stat-content">
+          <div class="stat-value">{{ statistiques.nombreTotalServices }}</div><br />
+          <div class="stat-label">Services</div>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card rendez-vous">
+        <div class="stat-icon">
+          <mat-icon>event</mat-icon>
+        </div>
+        <br />
+        <div class="stat-content">
+          <div class="stat-value">{{ statistiques.nombreTotalRendezVous }}</div><br />
+          <div class="stat-label">Rendez-vous</div>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Tabs -->
+    <mat-tab-group [(selectedIndex)]="selectedTab" class="content-tabs">
+      <!-- Users Management Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">people</mat-icon>
+          Gestion des utilisateurs
+        </ng-template>
+        <div class="tab-content">
+          <div *ngIf="loading" class="loading-container">
+            <mat-spinner></mat-spinner>
+          </div>
+
+          <div *ngIf="!loading" class="users-table-container">
+            <table mat-table [dataSource]="users" class="users-table">
+              <!-- ID Column -->
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let user"> {{ user.id }} </td>
+              </ng-container>
+
+              <!-- Prénom Column -->
+              <ng-container matColumnDef="prenom">
+                <th mat-header-cell *matHeaderCellDef> Prénom </th>
+                <td mat-cell *matCellDef="let user"> {{ user.prenom }} </td>
+              </ng-container>
+
+              <!-- Nom Column -->
+              <ng-container matColumnDef="nom">
+                <th mat-header-cell *matHeaderCellDef> Nom </th>
+                <td mat-cell *matCellDef="let user"> {{ user.nom }} </td>
+              </ng-container>
+
+              <!-- Email Column -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let user"> {{ user.email }} </td>
+              </ng-container>
+
+              <!-- Role Column -->
+              <ng-container matColumnDef="role">
+                <th mat-header-cell *matHeaderCellDef> Rôle </th>
+                <td mat-cell *matCellDef="let user">
+                  <mat-chip [class]="getRoleClass(user.role)">
+                    {{ user.role }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Statut Column -->
+              <ng-container matColumnDef="statut">
+                <th mat-header-cell *matHeaderCellDef> Statut </th>
+                <td mat-cell *matCellDef="let user">
+                  <mat-chip [class]="getStatutClass(user.statut)">
+                    {{ user.statut }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let user">
+                  <button mat-icon-button color="primary" *ngIf="user.statut === 'BLOQUE'"
+                    (click)="activerCompte(user.id!)" matTooltip="Activer le compte">
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" *ngIf="user.statut === 'ACTIF' && user.role !== 'ADMIN'"
+                    (click)="bloquerCompte(user.id!)" matTooltip="Bloquer le compte">
+                    <mat-icon>block</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Statistics Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">bar_chart</mat-icon>
+          Statistiques
+        </ng-template>
+        <div class="tab-content">
+          <div class="statistics-content">
+            <mat-card class="stat-detail-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="stat-icon people-icon">people</mat-icon>
+                <mat-card-title>Utilisateurs</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="stat-detail">
+                  <span class="stat-detail-label">Total utilisateurs :</span>
+                  <span class="stat-detail-value">{{ statistiques.nombreTotalClients }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-detail-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="stat-icon prestataires-icon">business</mat-icon>
+                <mat-card-title>Prestataires</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="stat-detail">
+                  <span class="stat-detail-label">Total prestataires :</span>
+                  <span class="stat-detail-value">{{ statistiques.nombreTotalPrestataires }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-detail-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="stat-icon services-icon">build</mat-icon>
+                <mat-card-title>Services</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="stat-detail">
+                  <span class="stat-detail-label">Total services :</span>
+                  <span class="stat-detail-value">{{ statistiques.nombreTotalServices }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-detail-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="stat-icon rendez-vous-icon">event</mat-icon>
+                <mat-card-title>Rendez-vous</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="stat-detail">
+                  <span class="stat-detail-label">Total rendez-vous :</span>
+                  <span class="stat-detail-value">{{ statistiques.nombreTotalRendezVous }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <!-- Tableau des statistiques par prestataire -->
+          <div class="prestataires-stats-section">
+            <h3 class="section-title">Statistiques détaillées par prestataire</h3>
+            <div class="stats-table-container">
+              <table mat-table [dataSource]="statistiquesPrestataires" class="stats-table">
+                <!-- Prénom Column -->
+                <ng-container matColumnDef="prenom">
+                  <th mat-header-cell *matHeaderCellDef> Prénom </th>
+                  <td mat-cell *matCellDef="let stat"> {{ stat.prestatairePrenom }} </td>
+                </ng-container>
+
+                <!-- Nom Column -->
+                <ng-container matColumnDef="nom">
+                  <th mat-header-cell *matHeaderCellDef> Nom </th>
+                  <td mat-cell *matCellDef="let stat"> {{ stat.prestataireNom }} </td>
+                </ng-container>
+
+                <!-- Email Column -->
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef> Email </th>
+                  <td mat-cell *matCellDef="let stat"> {{ stat.prestataireEmail }} </td>
+                </ng-container>
+
+                <!-- Service Column -->
+                <ng-container matColumnDef="service">
+                  <th mat-header-cell *matHeaderCellDef> Service </th>
+                  <td mat-cell *matCellDef="let stat"> {{ stat.serviceName }} </td>
+                </ng-container>
+
+                <!-- Total RDV Column -->
+                <ng-container matColumnDef="totalRdv">
+                  <th mat-header-cell *matHeaderCellDef> Total RDV </th>
+                  <td mat-cell *matCellDef="let stat"> {{ stat.nombreRendezVous }} </td>
+                </ng-container>
+
+                <!-- Confirmés Column -->
+                <ng-container matColumnDef="confirmes">
+                  <th mat-header-cell *matHeaderCellDef> Confirmés </th>
+                  <td mat-cell *matCellDef="let stat">
+                    <span class="stat-badge confirmed">{{ stat.nombreRendezVousConfirmes }}</span>
+                  </td>
+                </ng-container>
+
+                <!-- En Attente Column -->
+                <ng-container matColumnDef="enAttente">
+                  <th mat-header-cell *matHeaderCellDef> En Attente </th>
+                  <td mat-cell *matCellDef="let stat">
+                    <span class="stat-badge pending">{{ stat.nombreRendezVousEnAttente }}</span>
+                  </td>
+                </ng-container>
+
+                <!-- Annulés Column -->
+                <ng-container matColumnDef="annules">
+                  <th mat-header-cell *matHeaderCellDef> Annulés </th>
+                  <td mat-cell *matCellDef="let stat">
+                    <span class="stat-badge cancelled">{{ stat.nombreRendezVousAnnules }}</span>
+                  </td>
+                </ng-container>
+
+                <!-- Clients Uniques Column -->
+                <ng-container matColumnDef="clients">
+                  <th mat-header-cell *matHeaderCellDef> Clients Uniques </th>
+                  <td mat-cell *matCellDef="let stat"> {{ stat.nombreClientsUniques }} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedStatsColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedStatsColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

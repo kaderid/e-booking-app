@@ -1,0 +1,170 @@
+<div class="dashboard-container">
+  <!-- Toolbar  -->
+  <mat-toolbar color="primary" class="toolbar">
+    <div class="logo-container" routerLink="/home">
+      <mat-icon class="toolbar-icon">event_available</mat-icon>
+      <span class="toolbar-title">S&K-BookingPro</span>
+    </div>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" routerLink="/client/dashboard" class="dashboard-button">
+      <mat-icon>dashboard</mat-icon>
+      Mon Dashboard
+    </button>
+    <span class="user-info">
+      <mat-icon>person</mat-icon>
+      {{ currentUser?.prenom }} {{ currentUser?.nom }}
+    </span>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Déconnexion</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="welcome-section">
+      <h1 class="welcome-title">Bienvenue {{ currentUser?.prenom }} !</h1>
+      <p class="welcome-subtitle">Gérez vos rendez-vous et découvrez de nouveaux services</p>
+    </div>
+
+    <!-- Tabs -->
+    <mat-tab-group [(selectedIndex)]="selectedTab" class="content-tabs">
+      <!-- Services Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">build</mat-icon>
+          Services disponibles
+        </ng-template>
+        <div class="tab-content">
+          <div *ngIf="loading" class="loading-container">
+            <mat-spinner></mat-spinner>
+          </div>
+          <div *ngIf="!loading" class="services-grid">
+            <mat-card *ngFor="let service of services" class="service-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="service-icon">build_circle</mat-icon>
+                <mat-card-title>{{ service.nom }}</mat-card-title>
+                <mat-card-subtitle>{{ service.description }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="service-details">
+                  <div class="detail-item">
+                    <mat-icon>schedule</mat-icon>
+                    <span>{{ service.duree }} min</span>
+                  </div>
+                  <div class="detail-item">
+                    <mat-icon>euro</mat-icon>
+                    <span>{{ service.prix }} €</span>
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="openReservationDialog(service)">
+                  <mat-icon>calendar_today</mat-icon>
+                  Réserver
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Prestataires Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">business</mat-icon>
+          Professionnels
+        </ng-template>
+        <div class="tab-content">
+          <div class="prestataires-grid">
+            <mat-card *ngFor="let prestataire of prestataires" class="prestataire-card">
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="prestataire-icon">business_center</mat-icon>
+                <mat-card-title>{{ prestataire.nom }}</mat-card-title>
+                <mat-card-subtitle>{{ prestataire.specialite }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="prestataire-description">{{ prestataire.description }}</p>
+                <div class="prestataire-services">
+                  <h4>Services proposés :</h4>
+                  <mat-chip-listbox>
+                    <mat-chip *ngFor="let service of getServicesByPrestataireId(prestataire.id!)">
+                      {{ service.nom }}
+                    </mat-chip>
+                  </mat-chip-listbox>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-stroked-button color="primary" (click)="openDisponibilitesDialog(prestataire)">
+                  <mat-icon>info</mat-icon>
+                  Voir les disponibilités
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Mes Rendez-vous Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">event</mat-icon>
+          <span [matBadge]="rendezVous.length" [matBadgeHidden]="rendezVous.length === 0">
+            Mes rendez-vous
+          </span>
+        </ng-template>
+        <div class="tab-content">
+          <div *ngIf="rendezVous.length === 0" class="empty-state">
+            <mat-icon class="empty-icon">event_busy</mat-icon>
+            <h3>Aucun rendez-vous</h3>
+            <p>Vous n'avez pas encore de rendez-vous. Découvrez nos services et réservez dès maintenant !</p>
+            <button mat-raised-button color="primary" (click)="selectedTab = 0">
+              Explorer les services
+            </button>
+          </div>
+
+          <div *ngIf="rendezVous.length > 0" class="rendez-vous-container">
+            <mat-card *ngFor="let rdv of rendezVous" class="rendez-vous-card">
+              <div class="rdv-header">
+                <div class="rdv-date">
+                  <mat-icon>calendar_today</mat-icon>
+                  <span>{{ rdv.date | date: 'dd/MM/yyyy' }}</span>
+                </div>
+                <mat-chip [class]="getStatutClass(rdv.statut || 'EN_ATTENTE')">
+                  {{ rdv.statut }}
+                </mat-chip>
+              </div>
+              <mat-card-content>
+                <div class="rdv-details">
+                  <div class="rdv-info">
+                    <mat-icon>schedule</mat-icon>
+                    <span>{{ rdv.heure }}</span>
+                  </div>
+                  <div class="rdv-info">
+                    <mat-icon>build</mat-icon>
+                    <span>{{ rdv.serviceNom || 'Service #' + rdv.serviceId }}</span>
+                  </div>
+                  <div class="rdv-info">
+                    <mat-icon>business</mat-icon>
+                    <span>{{ rdv.prestatairePrenom }} {{ rdv.prestataireNom }}</span>
+                  </div>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-button color="warn" *ngIf="rdv.statut === 'EN_ATTENTE'">
+                  <mat-icon>cancel</mat-icon>
+                  Annuler
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

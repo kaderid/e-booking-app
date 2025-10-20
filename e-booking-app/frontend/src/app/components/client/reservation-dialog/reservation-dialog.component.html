@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>Réserver un rendez-vous</h2>
+
+<mat-dialog-content>
+  <div class="service-info">
+    <h3>{{ data.service.nom }}</h3>
+    <p>{{ data.service.description }}</p>
+    <div class="service-meta">
+      <span><mat-icon>schedule</mat-icon> {{ data.service.duree }} min</span>
+      <span><mat-icon>euro</mat-icon> {{ data.service.prix }} €</span>
+    </div>
+  </div>
+
+  <form [formGroup]="reservationForm">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Prestataire</mat-label>
+      <mat-select formControlName="prestataireId">
+        <mat-option *ngFor="let prestataire of prestataires" [value]="prestataire.id">
+          {{ prestataire.nom }} - {{ prestataire.specialite }}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>business</mat-icon>
+      <mat-error *ngIf="reservationForm.get('prestataireId')?.hasError('required')">
+        Veuillez sélectionner un prestataire
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Date du rendez-vous</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="reservationForm.get('date')?.hasError('required')">
+        La date est requise
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Heure</mat-label>
+      <input matInput type="time" formControlName="heure">
+      <mat-icon matPrefix>access_time</mat-icon>
+      <mat-error *ngIf="reservationForm.get('heure')?.hasError('required')">
+        L'heure est requise
+      </mat-error>
+    </mat-form-field>
+
+    <div *ngIf="disponibilites.length > 0" class="disponibilites-info">
+      <h4>Disponibilités du prestataire :</h4>
+      <mat-chip-listbox>
+        <mat-chip *ngFor="let dispo of disponibilites">
+          {{ getJourLabel(dispo.jourSemaine) }}: {{ dispo.heureDebut }} - {{ dispo.heureFin }}
+        </mat-chip>
+      </mat-chip-listbox>
+    </div>
+
+    <div *ngIf="creneauInvalide" class="creneau-invalide-message">
+      <mat-icon>warning</mat-icon>
+      <p>{{ messageCreneauInvalide }}</p>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!reservationForm.valid || loading || creneauInvalide">
+    <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+    <span *ngIf="!loading">Réserver</span>
+  </button>
+</mat-dialog-actions>

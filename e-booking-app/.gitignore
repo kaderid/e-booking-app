@@ -1,0 +1,43 @@
+# === MAVEN / JAVA ===
+target/
+*.class
+*.log
+*.jar
+*.war
+*.ear
+hs_err_pid*
+.recommenders/
+
+# === SPRING BOOT ===
+application-local.properties
+application-local.yml
+
+# === INTELLIJ / ECLIPSE ===
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.settings/
+.classpath
+bin/
+
+# === NODE / ANGULAR ===
+node_modules/
+dist/
+.env
+.npm/
+.angular/
+
+# === DOCKER ===
+*.pid
+*.seed
+*.bak
+*.backup
+volumes/
+db_data/
+
+# === SYSTEM ===
+.DS_Store
+Thumbs.db
+".idea/" 
