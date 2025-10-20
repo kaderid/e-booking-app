@@ -1,0 +1,55 @@
+<h2 mat-dialog-title>Disponibilités de {{ data.prestataire.nom }}</h2>
+
+<mat-dialog-content>
+  <div class="prestataire-info">
+    <h3>{{ data.prestataire.nom }}</h3>
+    <p class="specialite"><mat-icon>business</mat-icon> {{ data.prestataire.specialite }}</p>
+    <p class="description">{{ data.prestataire.description }}</p>
+  </div>
+
+  <div class="services-section">
+    <h4>Services proposés</h4>
+    <div class="services-list">
+      <mat-card *ngFor="let service of services" class="service-item">
+        <div class="service-header">
+          <mat-icon>build_circle</mat-icon>
+          <span class="service-name">{{ service.nom }}</span>
+        </div>
+        <div class="service-meta">
+          <span><mat-icon>schedule</mat-icon> {{ service.duree }} min</span>
+          <span><mat-icon>euro</mat-icon> {{ service.prix }} €</span>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="disponibilites-section">
+    <h4>Horaires de disponibilité</h4>
+
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <div *ngIf="!loading && disponibilites.length === 0" class="empty-state">
+      <mat-icon>event_busy</mat-icon>
+      <p>Aucune disponibilité configurée</p>
+    </div>
+
+    <div *ngIf="!loading && disponibilites.length > 0" class="disponibilites-list">
+      <mat-card *ngFor="let dispo of disponibilites" class="disponibilite-item">
+        <div class="jour-header">
+          <mat-icon>calendar_today</mat-icon>
+          <span class="jour-label">{{ getJourLabel(dispo.jourSemaine) }}</span>
+        </div>
+        <div class="horaires">
+          <mat-icon>access_time</mat-icon>
+          <span>{{ dispo.heureDebut }} - {{ dispo.heureFin }}</span>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="close()">Fermer</button>
+</mat-dialog-actions>

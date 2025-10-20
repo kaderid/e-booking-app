@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>
+  <mat-icon>event_available</mat-icon>
+  {{ isEditMode ? 'Modifier une disponibilité' : 'Ajouter une disponibilité' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="disponibiliteForm" class="disponibilite-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Jour de la semaine</mat-label>
+      <mat-select formControlName="jourSemaine">
+        <mat-option *ngFor="let jour of jours" [value]="jour.value">
+          {{ jour.label }}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>calendar_today</mat-icon>
+      <mat-error *ngIf="disponibiliteForm.get('jourSemaine')?.hasError('required')">
+        Le jour est requis
+      </mat-error>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Heure de début</mat-label>
+        <input matInput type="time" formControlName="heureDebut">
+        <mat-icon matPrefix>schedule</mat-icon>
+        <mat-error *ngIf="disponibiliteForm.get('heureDebut')?.hasError('required')">
+          L'heure de début est requise
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Heure de fin</mat-label>
+        <input matInput type="time" formControlName="heureFin">
+        <mat-icon matPrefix>schedule</mat-icon>
+        <mat-error *ngIf="disponibiliteForm.get('heureFin')?.hasError('required')">
+          L'heure de fin est requise
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-hint class="info-hint">
+      <mat-icon>info</mat-icon>
+      Définissez vos horaires de disponibilité pour ce jour. Les clients pourront prendre rendez-vous pendant ces créneaux.
+    </mat-hint>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="loading">
+    Annuler
+  </button>
+  <button mat-raised-button color="primary" (click)="onSubmit()"
+          [disabled]="disponibiliteForm.invalid || loading">
+    <mat-icon *ngIf="!loading">save</mat-icon>
+    <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+    {{ loading ? 'Enregistrement...' : (isEditMode ? 'Modifier' : 'Ajouter') }}
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,377 @@
+.dashboard-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.toolbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  .toolbar-icon {
+    margin-right: 8px;
+  }
+
+  .toolbar-title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .dashboard-button {
+    margin-right: 16px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 16px;
+  }
+}
+
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.welcome-section {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  .welcome-title {
+    margin: 0 0 8px 0;
+    font-size: 36px;
+    font-weight: 600;
+  }
+
+  .welcome-subtitle {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.9;
+  }
+}
+
+// Statistics Grid
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: white;
+    }
+  }
+
+  .stat-content {
+    flex: 1;
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #666;
+    }
+  }
+
+  &.users .stat-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  &.prestataires .stat-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+
+  &.services .stat-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+
+  &.rendez-vous .stat-icon {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  }
+}
+
+.content-tabs {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  .tab-icon {
+    margin-right: 8px;
+  }
+}
+
+.tab-content {
+  padding: 24px;
+  min-height: 400px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+// Users Table
+.users-table-container {
+  overflow-x: auto;
+}
+
+.users-table {
+  width: 100%;
+  background: white;
+
+  th {
+    background: #f5f5f5;
+    font-weight: 600;
+    color: #333;
+  }
+
+  td, th {
+    padding: 16px;
+  }
+
+  tr:hover {
+    background: #f9f9f9;
+  }
+}
+
+// Role and Status Chips
+.role-admin {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.role-pro {
+  background-color: #667eea !important;
+  color: white !important;
+}
+
+.role-client {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.statut-actif {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.statut-bloque {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+// Statistics Content
+.statistics-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.stat-detail-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+
+    &.people-icon {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    &.prestataires-icon {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    &.services-icon {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    &.rendez-vous-icon {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+  }
+
+  .stat-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+
+    .stat-detail-label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .stat-detail-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+}
+
+// Prestataires Stats Section
+.prestataires-stats-section {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 2px solid #e0e0e0;
+
+  .section-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #333;
+  }
+}
+
+.stats-table-container {
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stats-table {
+  width: 100%;
+
+  th {
+    background: #f5f5f5;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+  }
+
+  td {
+    text-align: center;
+  }
+
+  td, th {
+    padding: 16px;
+  }
+
+  tr:hover {
+    background: #f9f9f9;
+  }
+}
+
+.stat-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 14px;
+
+  &.confirmed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.pending {
+    background-color: #fff3e0;
+    color: #e65100;
+  }
+
+  &.cancelled {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .statistics-content {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-section {
+    .welcome-title {
+      font-size: 28px;
+    }
+  }
+
+  .users-table, .stats-table {
+    font-size: 12px;
+
+    td, th {
+      padding: 8px;
+    }
+  }
+
+  .prestataires-stats-section .section-title {
+    font-size: 20px;
+  }
+}

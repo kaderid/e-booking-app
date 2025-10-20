@@ -1,0 +1,60 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Jenkins
+.jenkins/
+jenkins-*.sh
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# IDE et outils de développement
+.vscode/
+.idea/
+.claude/
+.claude_code/
+.claudesync/
+*.swp
+*.swo
+*~
+
+# Node modules (au cas où)
+node_modules/
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Build outputs
+dist/
+build/
+out/
+*.jar
+*.war
+*.ear
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+

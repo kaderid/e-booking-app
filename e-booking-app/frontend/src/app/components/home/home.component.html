@@ -1,0 +1,166 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <mat-toolbar color="primary" class="navbar">
+      <div class="navbar-content">
+        <div class="logo" routerLink="/home">
+          <mat-icon>event_available</mat-icon>
+          <span>S&K-BookingPro</span>
+        </div>
+        <div class="nav-buttons" *ngIf="!isAuthenticated">
+          <button mat-button (click)="navigateToLogin()">
+            <mat-icon>login</mat-icon>
+            Connexion
+          </button>
+          <button mat-raised-button color="accent" (click)="navigateToRegister()">
+            <mat-icon>person_add</mat-icon>
+            S'inscrire
+          </button>
+        </div>
+        <div class="nav-buttons" *ngIf="isAuthenticated">
+          <button mat-raised-button color="accent" (click)="navigateToDashboard()">
+            <mat-icon>dashboard</mat-icon>
+            Mon Dashboard
+          </button>
+          <button mat-button [matMenuTriggerFor]="menu">
+            <mat-icon>person</mat-icon>
+            {{ currentUser?.email }}
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="logout()">
+              <mat-icon>exit_to_app</mat-icon>
+              <span>Déconnexion</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </mat-toolbar>
+
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          Réservez vos rendez-vous en toute simplicité
+        </h1>
+        <p class="hero-subtitle">
+          La plateforme moderne pour gérer tous vos rendez-vous professionnels.
+          Trouvez les meilleurs prestataires et prenez rendez-vous instantanément.
+        </p>
+        <div class="hero-actions">
+          <button mat-raised-button color="primary" class="cta-button" (click)="navigateToRegister()">
+            <mat-icon>rocket_launch</mat-icon>
+            Commencer gratuitement
+          </button>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="assets/online.jpg" alt="E-Booking" class="hero-img">
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="section-header">
+      <h2>Pourquoi choisir E-Booking ?</h2>
+      <p>Une solution complète pour simplifier la gestion de vos rendez-vous</p>
+    </div>
+
+    <div class="features-grid">
+      <mat-card *ngFor="let feature of features" class="feature-card">
+        <div class="feature-icon">
+          <mat-icon color="primary">{{ feature.icon }}</mat-icon>
+        </div>
+        <mat-card-header>
+          <mat-card-title>{{ feature.title }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ feature.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services-section">
+    <div class="section-header">
+      <h2>Exemple de catégories de services</h2>
+      <p>Découvrez tous les services disponibles sur notre plateforme</p>
+    </div>
+
+    <div class="services-grid">
+      <mat-card *ngFor="let service of services" class="service-card">
+        <div class="service-icon-wrapper">
+          <mat-icon class="service-icon">{{ service.icon }}</mat-icon>
+        </div>
+        <mat-card-header>
+          <mat-card-title>{{ service.name }}</mat-card-title>
+          <mat-card-subtitle>{{ service.description }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="navigateToRegister()">
+            Explorer
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <mat-card class="cta-card">
+      <mat-card-content>
+        <h2>Prêt à commencer ?</h2>
+        <p>Rejoignez des milliers d'utilisateurs qui gèrent leurs rendez-vous avec E-Booking</p>
+        <div class="cta-buttons">
+          <button mat-raised-button color="primary" class="large-button" (click)="navigateToRegister()">
+            <mat-icon>person_add</mat-icon>
+            Créer un compte gratuitement
+          </button>
+          <button mat-stroked-button class="large-button" (click)="navigateToLogin()">
+            <mat-icon>login</mat-icon>
+            Se connecter
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>S&K-BookingPro</h3>
+        <p>La plateforme de réservation en ligne pour tous vos besoins professionnels.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Liens rapides</h4>
+        <ul>
+          <li><a href="#">À propos</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Assistance</h4>
+        <ul>
+          <li><a href="#">Centre d'aide</a></li>
+          <li><a href="#">Conditions d'utilisation</a></li>
+          <li><a href="#">Politique de confidentialité</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Suivez-nous</h4>
+        <div class="social-icons">
+          <mat-icon>facebook</mat-icon>
+          <mat-icon>X</mat-icon>
+          <mat-icon>linkedin</mat-icon>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 S&K-BookingPro. Tous droits réservés.</p>
+    </div>
+  </footer>
+</div>

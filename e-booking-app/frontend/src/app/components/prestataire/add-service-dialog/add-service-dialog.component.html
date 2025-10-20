@@ -1,0 +1,65 @@
+<h2 mat-dialog-title>
+  <mat-icon>add_circle</mat-icon>
+  {{ isEditMode ? 'Modifier un service' : 'Ajouter un nouveau service' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="serviceForm" class="service-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nom du service</mat-label>
+      <input matInput formControlName="nom" placeholder="Ex: Coupe homme">
+      <mat-icon matPrefix>build</mat-icon>
+      <mat-error *ngIf="serviceForm.get('nom')?.hasError('required')">
+        Le nom est requis
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="3"
+                placeholder="Décrivez votre service"></textarea>
+      <mat-icon matPrefix>description</mat-icon>
+      <mat-error *ngIf="serviceForm.get('description')?.hasError('required')">
+        La description est requise
+      </mat-error>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Durée (minutes)</mat-label>
+        <input matInput type="number" formControlName="duree" placeholder="30">
+        <mat-icon matPrefix>schedule</mat-icon>
+        <mat-error *ngIf="serviceForm.get('duree')?.hasError('required')">
+          La durée est requise
+        </mat-error>
+        <mat-error *ngIf="serviceForm.get('duree')?.hasError('min')">
+          Minimum 15 minutes
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Prix (€)</mat-label>
+        <input matInput type="number" formControlName="prix" placeholder="25.00">
+        <mat-icon matPrefix>euro</mat-icon>
+        <mat-error *ngIf="serviceForm.get('prix')?.hasError('required')">
+          Le prix est requis
+        </mat-error>
+        <mat-error *ngIf="serviceForm.get('prix')?.hasError('min')">
+          Le prix doit être positif
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="loading">
+    Annuler
+  </button>
+  <button mat-raised-button color="primary" (click)="onSubmit()"
+          [disabled]="serviceForm.invalid || loading">
+    <mat-icon *ngIf="!loading">save</mat-icon>
+    <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+    {{ loading ? 'Enregistrement...' : (isEditMode ? 'Modifier' : 'Ajouter') }}
+  </button>
+</mat-dialog-actions>
