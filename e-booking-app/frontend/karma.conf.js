@@ -42,7 +42,7 @@ module.exports = function (config) {
       suite: 'frontend',
       useBrowserName: false
     },
-    reporters: ['progress', 'kjhtml', 'junit'],
+    reporters: ['progress', 'kjhtml', 'junit', 'coverage'],
     browsers: ['ChromeHeadless'],
     restartOnFileChange: true,
     customLaunchers: {

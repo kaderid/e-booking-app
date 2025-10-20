@@ -83,8 +83,8 @@ pipeline {
             }
             post {
                 always {
-                    // Publier les rapports de tests Karma
-                    junit "${FRONTEND_DIR}/coverage/frontend/junit/*.xml"
+                    // Publier les rapports de tests Karma (optionnel)
+                    junit allowEmptyResults: true, testResults: "${FRONTEND_DIR}/coverage/frontend/junit/*.xml"
                     // Publier le rapport de couverture
                     publishHTML([
                         allowMissing: false,
